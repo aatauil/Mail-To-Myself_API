@@ -24,8 +24,7 @@ app.use(express.static(__dirname + '/public'));
 
 
 app.get('/', (req, res) => {
-    console.log("okkk")
-    // res.render('pages/index.ejs');
+    res.render('pages/index.ejs');
 });
 
 
