@@ -2,9 +2,28 @@
 <%- include('../template/head.ejs')-%>
 <%- include('../template/nav.ejs')-%>
 
-<body class="container mx-auto p-3">
-    <h1 class="text-4xl font-bold">
-        Send anything you want to your email.
-    </h1>
-    <p>You ever send a file or image to your email so you can access it on another device? Now you don't need to! Just upload your file & we will send it to you straight away!</p>
+<body class="container w-full mx-auto p-3">
+    <section class="h-full flex flex-col items-center justify-center pt-16">
+        <article class=" pr-6 text-center pb-12">
+            <h1 class="text-4xl font-bold ">
+                Send anything you want to your email.
+            </h1>
+            <p>Have you ever send a file or image to your own email so you can access it on another devices? Now you won't need to anymore! Just upload your assets here & we will send it to you straight away!</p>
+        </article>
+        <article class="shadow-lg p-12 flex-grow w-full">
+            <form method="POST" class="flex justify-around">
+                <div class="w-5/12 border-dashed border-4 border-gray-600 flex flex-col justify-center items-center ">
+                    Upload file
+                    <input type="file" name="" id="">
+                </div>
+                <div class="w-5/12 ">
+                    <textarea class="w-full h-full bg-gray-200 p-3" name="" id="" cols="30" rows="10" placeholder="paste your text in here"></textarea>
+                </div>
+            </form>
+        </article>
+        <div class=" rounded pl-3 pr-6 py-3 mt-2 flex">
+            <input class="shadow py-3 px-12 mr-2" type="email" name="" id="" placeholder="Your e-mail address">
+            <input type="submit" value="Submit" class="shadow bg-green-500 rounded px-6 text-white font-bold">
+        </div>
+    </section>
 </body>
