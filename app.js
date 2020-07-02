@@ -1,9 +1,12 @@
 const express = require("express");
 const app = express();
 const path = require('path')
+import { ESLint } from "eslint";
+import Mailer from "./controller/mailer"
 
-const { ESLint } = require("eslint");
+// -------------------------------------------------------------------------------------------
 
+// ESLINT
 (async function main() {
   // 1. Create an instance.
   const eslint = new ESLint();
@@ -22,6 +25,8 @@ const { ESLint } = require("eslint");
   console.error(error);
 });
 
+// -------------------------------------------------------------------------------------------
+
 // Server config
 
 app.set("port", process.env.PORT || 3000);
@@ -33,25 +38,30 @@ app.listen(app.get("port"), () => {
     )
 })
 
-// View engine setup
-app.set('views', path.join(__dirname, '/views'));
-console.log(__dirname)
-app.set('view engine', 'ejs');
+// -------------------------------------------------------------------------------------------
 
-// Static folder setup
+// View engine setup + static folder
+app.set('views', path.join(__dirname, '/views'));
+app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
+
+// -------------------------------------------------------------------------------------------
 
 // Parse JSON bodies
 app.use(express.json());
 app.use(express.urlencoded());
 
+// -------------------------------------------------------------------------------------------
 
 app.get('/', (req, res) => {
     res.render('pages/index.ejs');
 });
 
 app.post('', (req) => {
-  console.log(req.body)
+
+  const newMail = new Mailer(req.body.text, req.body.email)
+  newMail.params();
+  newMail.main();
 })
 
 
