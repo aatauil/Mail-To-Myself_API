@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const exphbs  = require('express-handlebars');
 const path = require('path')
 import { ESLint } from "eslint";
 import Mailer from "./controller/mailer"
@@ -41,8 +42,14 @@ app.listen(app.get("port"), () => {
 // -------------------------------------------------------------------------------------------
 
 // View engine setup + static folder
+
+app.engine('.hbs', exphbs({
+  extname: '.hbs', 
+  defaultLayout: 'main'
+}));
+
+app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, '/views'));
-app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
 
 // -------------------------------------------------------------------------------------------
@@ -53,10 +60,14 @@ app.use(express.urlencoded());
 
 // -------------------------------------------------------------------------------------------
 
+// Routing
 app.get('/', (req, res) => {
-    res.render('pages/index.ejs');
+    res.render('index.hbs', {title: "Send files to yourself!"});
 });
 
+
+// -------------------------------------------------------------------------------------------
+//Handlers
 app.post('', (req) => {
 
   const newMail = new Mailer(req.body.text, req.body.email)
