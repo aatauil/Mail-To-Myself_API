@@ -41,9 +41,17 @@ app.set('view engine', 'ejs');
 // Static folder setup
 app.use(express.static(__dirname + '/public'));
 
+// Parse JSON bodies
+app.use(express.json());
+app.use(express.urlencoded());
+
 
 app.get('/', (req, res) => {
     res.render('pages/index.ejs');
 });
+
+app.post('', (req) => {
+  console.log(req.body)
+})
 
 
