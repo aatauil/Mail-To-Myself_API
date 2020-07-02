@@ -1,9 +1,42 @@
 const express = require("express");
 const app = express();
 const exphbs  = require('express-handlebars');
-const path = require('path')
+const path = require('path');
 import { ESLint } from "eslint";
-import Mailer from "./controller/mailer"
+import Mailer from "./controller/mailer";
+
+const multer = require('multer');
+
+// Multer Config
+const storage =   multer.diskStorage({
+  destination: './public/uploads',
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+   storage : storage,
+   limits: {fileSize: 10000000},
+   fileFilter: (req, file, callback) => {
+    checkFileType(file, callback)
+   }
+  }).single('SendToMyself');
+
+// Check File Type
+function checkFileType(file, callback){
+  // Allowed ext
+  const fileTypes = /jpeg|jpeg|png|gif/;
+  const extName = filetypes.text(path.extname(file.originalname).toLowerCase())
+  // Checkk mime
+  const mimeType = fileTypes.test(file.mimeType)
+
+  if(mimeType && extName){
+    return callback(null, true);
+  } else {
+    callback('Error: This file type is not allowed to be send through mail.')
+  }
+}
 
 // -------------------------------------------------------------------------------------------
 
@@ -68,11 +101,16 @@ app.get('/', (req, res) => {
 
 // -------------------------------------------------------------------------------------------
 //Handlers
-app.post('', (req) => {
-
+app.post('/', (req,res) => {
+  upload(req,res,(err) => {
+    if(err) {
+        return res.end(`${err}`);
+    }
+    console.log(req.file)
+    res.end("File is uploaded");
+  });
+  console.log(req.body)
   const newMail = new Mailer(req.body.text, req.body.email)
   newMail.params();
   newMail.main();
 })
-
-
