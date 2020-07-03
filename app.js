@@ -27,7 +27,7 @@ const upload = multer({
 function checkFileType(file, callback){
   // Allowed ext
   const fileTypes = /jpeg|jpeg|png|gif/;
-  const extName = filetypes.text(path.extname(file.originalname).toLowerCase())
+  const extName = fileTypes.text(path.extname(file.originalname).toLowerCase())
   // Checkk mime
   const mimeType = fileTypes.test(file.mimeType)
 
@@ -94,14 +94,14 @@ app.use(express.urlencoded());
 // -------------------------------------------------------------------------------------------
 
 // Routing
-app.get('/', (req, res) => {
-    res.render('index.hbs', {title: "Send files to yourself!"});
+app.get('/api', (req, res) => {
+    res.send("Posted");
 });
 
 
 // -------------------------------------------------------------------------------------------
 //Handlers
-app.post('/', (req,res) => {
+app.post('/api', (req,res) => {
   upload(req,res,(err) => {
     if(err) {
         return res.end(`${err}`);
