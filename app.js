@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const exphbs  = require('express-handlebars');
 const path = require('path');
 import { ESLint } from "eslint";
 import Mailer from "./controller/mailer";
@@ -77,16 +76,6 @@ app.listen(app.get("port"), () => {
 
 // -------------------------------------------------------------------------------------------
 
-// View engine setup + static folder
-
-app.engine('.hbs', exphbs({
-  extname: '.hbs', 
-  defaultLayout: 'main'
-}));
-
-app.set('view engine', '.hbs');
-app.set('views', path.join(__dirname, '/views'));
-app.use(express.static(__dirname + '/public'));
 
 // MiddleWare
 app.use(cors());
@@ -98,15 +87,15 @@ app.use(express.urlencoded());
 // -------------------------------------------------------------------------------------------
 
 // Routing
-app.get('/api', (req, res) => {
+app.post('/api', (req, res) => {
     console.log(req.body)
-    res.json({ msg: "success"});
+    console.log(req)
 });
 
 
 // -------------------------------------------------------------------------------------------
 // Handlers
-app.post('/api', (req,res) => {
+app.post('/api/test', (req,res) => {
   upload(req,res,(err) => {
     if(err) {
         return res.end(`${err}`);
