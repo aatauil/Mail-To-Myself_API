@@ -4,8 +4,11 @@ const exphbs  = require('express-handlebars');
 const path = require('path');
 import { ESLint } from "eslint";
 import Mailer from "./controller/mailer";
+var cors = require('cors');
 
 const multer = require('multer');
+
+
 
 // Multer Config
 const storage =   multer.diskStorage({
@@ -85,7 +88,8 @@ app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, '/views'));
 app.use(express.static(__dirname + '/public'));
 
-// -------------------------------------------------------------------------------------------
+// MiddleWare
+app.use(cors());
 
 // Parse JSON bodies
 app.use(express.json());
@@ -95,12 +99,13 @@ app.use(express.urlencoded());
 
 // Routing
 app.get('/api', (req, res) => {
-    res.send("Posted");
+    console.log(req.body)
+    res.json({ msg: "success"});
 });
 
 
 // -------------------------------------------------------------------------------------------
-//Handlers
+// Handlers
 app.post('/api', (req,res) => {
   upload(req,res,(err) => {
     if(err) {
