@@ -1,12 +1,29 @@
 const express = require("express");
 const app = express();
 var cors = require('cors');
-const { upload } = require("./config/multer");
-const bodyParser = require("body-parser")
+// const { upload } = require("./config/multer");
+const bodyParser = require("body-parser");
+const { default: adaptRequest } = require("./helpers/adapt-request");
+const {Mailer} = require("./controller/mailer")
 
 // MiddleWare
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use((req ,res ,next) => {
+    const err = new Error("Not Found");
+    err.status = 404;
+    next(err);
+})
+
+app.use((err, req, res, next) =>{
+    res.status(err.status || 500);
+    res.send({
+        error: {
+            status: err.status || 500,
+            message: err.message
+        }
+    })
+})
 
 // Server config
 
@@ -20,16 +37,14 @@ app.listen(app.get("port"), () => {
     )
 })
 
-app.post('/', (req,res) => {
-    upload(req, res, (err) => {
-        if (err) {
-            // An error occurred when uploading to server memory
-            return res.status(502).json(err) ;
-        }
-        console.log(req.body);
-        console.log(req.files);
-        res.send("sucess")
-  })
+app.post('/', async (req,res) => {
+        const adaptedData = adaptRequest(req)
+        const mailer = new Mailer(adaptedData)
+        const send = await mailer.send()
+        res.send("ok")
+        
+
+
 })
 
 
