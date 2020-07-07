@@ -1,4 +1,7 @@
+import MailAdapter from "../helpers/mail-adapter";
+
 const nodemailer = require("nodemailer");
+const createError = require('http-errors')
 
 
 export class Mailer {
@@ -9,7 +12,7 @@ export class Mailer {
     }
 
 
-    async send(error) {         
+    async send() {         
         // Generate test SMTP service account from ethereal.email
         // Only needed if you don't have a real mail account for testing
         let testAccount = await nodemailer.createTestAccount();
@@ -25,25 +28,23 @@ export class Mailer {
             },
         })
 
-        let mailOptions = {
+        let details = {
             from: '"Fred Foo 👻" <foo@example.com>', // sender address
             to: this.email, // list of receivers
             subject: "testing node mailer ✔", // Subject line
             text: this.text, // plain text body
             html: "<b>Hello world?</b>", // html body
         }
+
+        try{
+            let info = await transporter.sendMail(details);
+            let adapted = MailAdapter(info)
+            return adapted
+        }catch(err){
+            return createError(400, err.message)
+        }
         // send mail with defined transport object
-        let info = await transporter.sendMail(mailOptions, function(error, info){
-            if(error){
-                return error;
-            }
-            console.log("Message sent: %s", info.messageId);
-            // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-            
-            // Preview only available when sending through an Ethereal account
-            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-            // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-        });
         
-  
+
+      
 }}

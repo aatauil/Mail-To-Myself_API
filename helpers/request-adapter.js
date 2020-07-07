@@ -1,6 +1,5 @@
-import { request } from "http"
 
-export default function adaptRequest(request){
+export default function RequestAdapter(request){
     return (
         Object.freeze({
             path: request.path,
