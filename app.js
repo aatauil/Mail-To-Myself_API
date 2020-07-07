@@ -5,14 +5,13 @@ var cors = require('cors');
 const bodyParser = require("body-parser");
 const { default: adaptRequest } = require("./helpers/adapt-request");
 const {Mailer} = require("./controller/mailer")
+const createError = require('http-errors')
 
 // MiddleWare
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req ,res ,next) => {
-    const err = new Error("Not Found");
-    err.status = 404;
-    next(err);
+    next(createError(404, 'Not Found'))
 })
 
 app.use((err, req, res, next) =>{
